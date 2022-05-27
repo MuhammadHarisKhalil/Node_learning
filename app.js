@@ -3,6 +3,7 @@ const app = express();
 const mongoose = require('mongoose')
 const PORT = 5000;
 const {MONGOURL} = require('./keys')
+require('./Models/user')
 
 mongoose.connect(MONGOURL,{
     useNewUrlParser:true,
