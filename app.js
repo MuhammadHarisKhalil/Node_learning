@@ -3,7 +3,13 @@ const app = express();
 const mongoose = require('mongoose')
 const PORT = 5000;
 const {MONGOURL} = require('./keys')
+
 require('./Models/user')
+require('./Models/post')
+
+app.use(express.json())
+app.use(require('./Router/auth'))
+app.use(require('./Router/post'))
 
 mongoose.connect(MONGOURL,{
     useNewUrlParser:true,
