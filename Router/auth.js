@@ -11,14 +11,14 @@ router.get("/protected", requirelogin,(req, res) => {
   res.send("Hello World");
 });
 
-router.post("/signup", (req, res) => {
+router.post("/register", (req, res) => {
   const { name, email, password } = req.body;
   if (!email || !name || !password) {
-    return res.status(422).json("Please Fill all the Fields");
+    return res.status(422).json({error:"Please Fill all the Fields"});
   }
   User.findOne({ email: email }).then((savedUser) => {
     if (savedUser) {
-      return res.status(422).json("Already Registered");
+      return res.status(422).json({error:"Already Registered"});
     }
     bcrypt
       .hash(password, 12)
@@ -32,7 +32,7 @@ router.post("/signup", (req, res) => {
         user
           .save()
           .then((user) => {
-            return res.json("Register Successfully");
+            return res.json({message:"Register Successfully"});
           })
           .catch((err) => {
             console.log(err);
@@ -44,22 +44,22 @@ router.post("/signup", (req, res) => {
 router.post("/signin", (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    return  res.status(422).json("Please Fill all the Fields");
+    return  res.status(422).json({error:"Please Fill all the Fields"});
    } else {
      User.findOne({email:email})
      .then(savedUser => {
        if(!savedUser){
-         return res.status(422).json("Please Enter the valid email and password");
+         return res.status(422).json({error:"Please Enter the valid email and password"});
        }
        bcrypt.compare(password,savedUser.password)
        .then(doMatch=>{
         if(doMatch){
         //  return res.json("Login Successfully");
         const token = jwt.sign({_id:savedUser._id},JWT_SECRET)
-        return res.json({token})
+        return res.json({token,email})
         }
         else {
-         return res.status(422).json("Please Enter the valid email and password");
+         return res.status(422).json({error:"Please Enter the valid email and password"});
         }
        })
        .catch(err=>{
