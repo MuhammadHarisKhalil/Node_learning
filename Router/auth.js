@@ -7,9 +7,6 @@ const jwt = require('jsonwebtoken');
 const {JWT_SECRET} = require('../keys')
 const requirelogin =require('../Middleware/requirelogin')
 
-router.get("/protected", requirelogin,(req, res) => {
-  res.send("Hello World");
-});
 
 router.post("/register", (req, res) => {
   const { name, email, password } = req.body;
@@ -56,7 +53,8 @@ router.post("/signin", (req, res) => {
         if(doMatch){
         //  return res.json("Login Successfully");
         const token = jwt.sign({_id:savedUser._id},JWT_SECRET)
-        return res.json({token,email})
+        const {_id,name,email} = savedUser
+        return res.json({token,user:{_id,name,email}})
         }
         else {
          return res.status(422).json({error:"Please Enter the valid email and password"});
