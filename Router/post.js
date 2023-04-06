@@ -45,4 +45,32 @@ router.get("/mypost",requirelogin,(req,res)=>{
 })
 //self post
 
+router.put("/like",requirelogin,(req,res)=>{
+    Post.findByIdAndUpdate(req.body.postId,{
+        $push:{likes:req.user._id}
+    },{
+        new:true
+    }).exec((err,result)=>{
+        if(err){
+            return res.status(422).json({error:err})
+        }else{
+            res.json(result)
+        }
+    })
+})
+
+router.put("/unlike",requirelogin,(req,res)=>{
+    Post.findByIdAndUpdate(req.body.postId,{
+        $pull:{likes:req.user._id}
+    },{
+        new:true
+    }).exec((err,result)=>{
+        if(err){
+            return res.status(422).json({error:err})
+        }else{
+            res.json(result)
+        }
+    })
+})
+
 module.exports = router

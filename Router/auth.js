@@ -7,9 +7,6 @@ const jwt = require('jsonwebtoken');
 const {JWT_SECRET} = require('../keys')
 const requirelogin =require('../Middleware/requirelogin')
 
-router.get("/protected", requirelogin,(req, res) => {
-  res.send("Hello World");
-});
 
 router.post("/register", (req, res) => {
   const { name, email, password } = req.body;
